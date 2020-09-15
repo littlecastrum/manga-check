@@ -1,0 +1,15 @@
+{
+  "name": "manga-check",
+  "version": "1.0.0",
+  "description": "A checked to see if my manga has been updated",
+  "main": "index.js",
+  "author": "Dan Castrillo",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "jsdom": "^16.4.0",
+    "moment": "^2.28.0",
+    "node-fetch": "^2.6.1",
+    "prompts": "^2.3.2"
+  }
+}
