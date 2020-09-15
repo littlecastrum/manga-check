@@ -11,5 +11,8 @@
     "moment": "^2.28.0",
     "node-fetch": "^2.6.1",
     "prompts": "^2.3.2"
+  },
+  "bin": {
+    "mangas": "./index.js"
   }
 }
