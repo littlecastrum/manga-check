@@ -8,12 +8,12 @@ const { storage, catchStdout } = require('./utils');
 global.log = "";
 
 async function interactive(option) {
-	if (option === 4) return;
+	if (option === 'exit') return;
 	
 	const mangas = await storage.load();
 	const { value } = await prompts(mainChoices);
 	await actions[value](mangas);
-	interactive(value);
+	return interactive(value);
 }
 
 async function notify() {

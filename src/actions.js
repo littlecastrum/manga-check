@@ -6,7 +6,7 @@ const { addMangaQuestions, checkMangaQuestions } = require('./questions');
 
 const showUnseen = ({ seen, name, url, lastUpdate }) => {		
 	if (!seen) {
-		const notification = `\nWatch ${name.red} latests chapter at ${url.blue}`;
+		const notification = `\nWatch ${name.red} latests chapter at ${url.blue}\n`;
 		console.log(notification);
 	};
 	return { seen, name, url, lastUpdate }
@@ -24,7 +24,7 @@ async function update(mangas) {
 	Maybe(data)
 		.map(arr => arr.every(({ seen }) => seen) ? null : data)
 		.map(arr => arr.map(showUnseen))
-		.alt(() => console.log('\nYou are up to date'.yellow))
+		.alt(() => console.log('\nYou are up to date\n'.yellow))
 	return await storage.update(data);
 }
 
@@ -65,5 +65,5 @@ module.exports = {
 	update,
 	check,
 	remove: () => console.log('REMOVE'),
-	exit: () => console.log('\nBYE BYE!')	
+	exit: () => console.log('\nBYE BYE!'.yellow)	
 }
