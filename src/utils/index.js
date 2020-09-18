@@ -55,9 +55,27 @@ async function getLastest({ name, url, seen, lastUpdate }) {
 	};
 }
 
+function catchStdout() {
+	let data = '';
+	const stdoutWrite = process.stdout.write;
+	
+	process.stdout.write = ((write) => {
+		return function(string) {
+			data = string;
+			write.apply(process.stdout, arguments);
+		};
+	})(process.stdout.write);
+
+	return () => {
+		process.stdout.write = stdoutWrite;
+		return data;
+	}
+}
+
 module.exports = {
 	getDocument,
 	getLastest,
 	storage,
-	Maybe
+	Maybe,
+	catchStdout
 }

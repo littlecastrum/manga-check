@@ -12,7 +12,6 @@ async function load() {
 }
 
 async function update(data) {
-	const filePath = path.join(__dirname, '..', 'db.json');
 	try {
 		await writeFile(filePath, JSON.stringify(data), 'utf8');
 	} catch(err) {

@@ -5,7 +5,10 @@ const { Maybe, getLastest, storage } = require('./utils');
 const { addMangaQuestions, checkMangaQuestions } = require('./questions');
 
 const showUnseen = ({ seen, name, url, lastUpdate }) => {		
-	if (!seen) console.log(`Watch ${name} latests chapter at ${url}`);
+	if (!seen) {
+		const notification = `\nWatch ${name.red} latests chapter at ${url.blue}`;
+		console.log(notification);
+	};
 	return { seen, name, url, lastUpdate }
 };
 
@@ -21,7 +24,7 @@ async function update(mangas) {
 	Maybe(data)
 		.map(arr => arr.every(({ seen }) => seen) ? null : data)
 		.map(arr => arr.map(showUnseen))
-		.alt(() => console.log('You are up to date'))
+		.alt(() => console.log('\nYou are up to date'.yellow))
 	return await storage.update(data);
 }
 

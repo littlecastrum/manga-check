@@ -1,5 +1,3 @@
-import os
-
 import subprocess
 
 def notify(notification):

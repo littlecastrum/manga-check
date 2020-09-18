@@ -1,7 +1,11 @@
+const colors = require('colors');
 const prompts = require('prompts');
+const { exec } = require('child_process');
 const actions = require('./actions');
 const { mainChoices } = require('./questions');
-const { storage } = require('./utils');
+const { storage, catchStdout } = require('./utils');
+
+global.log = "";
 
 async function interactive(option) {
 	if (option === 4) return;
@@ -13,8 +17,15 @@ async function interactive(option) {
 }
 
 async function notify() {
+	colors.disable();
 	const mangas = await storage.load();
+	const releaseStdout = catchStdout();
 	await actions.update(mangas);
+	const notification = releaseStdout();
+	const title = 'Mangas updated'
+	const action = `display notification "${notification}" with title "${title}"`
+	const script = `osascript -e '${action}'`
+	exec(script)	
 }
 
 async function controller(isNotify) {
