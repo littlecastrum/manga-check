@@ -1,12 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-const util = require('util');
 const fetch = require('node-fetch');
 const moment = require('moment');
 const { JSDOM } = require("jsdom");
 const Maybe = require('./maybe');
-
-const writeFile = util.promisify(fs.writeFile);
+const storage = require('./storage');
 
 function getDocument(html) {
 	const dom = new JSDOM(html);
@@ -59,22 +55,9 @@ async function getLastest({ name, url, seen, lastUpdate }) {
 	};
 }
 
-async function updateStorage(data) {
-	const filePath = path.join(__dirname, '..', 'db.json');
-	try {
-		await writeFile(filePath, JSON.stringify(data), 'utf8');
-	} catch(err) {
-		console.error(err);
-	}
-}
-
-function checkSeen(mangas) {
-
-}
-
 module.exports = {
 	getDocument,
 	getLastest,
-	checkSeen,
-	updateStorage
+	storage,
+	Maybe
 }

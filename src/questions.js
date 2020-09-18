@@ -1,24 +1,35 @@
 require('colors');
 
 const OPTIONS = {
-	add: 'Add new manga',
-	update: 'Update to latests',
-	check: 'Check unseen mangas',
-	remove: 'Remove manga from collection',
-	close: 'Close program'
+	add: {
+		title: 'Add new manga',
+		value: 'add'
+	},
+	update: {
+		title: 'Update to latests',
+		value: 'update'
+	},
+	check: {
+		title: 'Check unseen mangas',
+		value: 'check'
+	},
+	remove: {
+		title: 'Remove manga from collection',
+		value: 'remove'
+	},
+	exit: {
+		title: 'Exit program',
+		value: 'exit'
+	}
 }
+
+const extractChoices = (acc, {title, value}) => [...acc, { title, value }];
 
 const mainChoices = {
 	type: 'select',
 	name: 'value',
 	message: 'Options',
-	choices: [
-		{ title: OPTIONS.add, value: 0 },
-		{ title: OPTIONS.update, value: 1 },
-		{ title: OPTIONS.check, value: 2 },
-		{ title: OPTIONS.remove, value: 3 },
-		{ title: OPTIONS.close, value: 4 }
-	],
+	choices: Object.values(OPTIONS).reduce(extractChoices, []),
 	initial: 0
 };
 

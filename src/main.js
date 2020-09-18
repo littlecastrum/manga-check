@@ -1,23 +1,26 @@
-const fs = require('fs');
-const path = require('path');
-const util = require('util');
-
-const readFile = util.promisify(fs.readFile);
-const filePath = path.join(__dirname, '..', 'db.json');
-
 const prompts = require('prompts');
 const actions = require('./actions');
 const { mainChoices } = require('./questions');
+const { storage } = require('./utils');
 
-async function controller() {
-	let response ;
-	while (response !== 4) {
-		const buffer = await readFile(filePath);
-		const mangas = JSON.parse(buffer.toString('utf-8'));
-		const { value } = await prompts(mainChoices);
-		await actions[value](mangas);
-		response = value;
-	}
+async function interactive(option) {
+	if (option === 4) return;
+	
+	const mangas = await storage.load();
+	const { value } = await prompts(mainChoices);
+	await actions[value](mangas);
+	interactive(value);
+}
+
+async function notify() {
+	const mangas = await storage.load();
+	await actions.update(mangas);
+}
+
+async function controller(isNotify) {
+	isNotify 
+		? notify()
+		: interactive();
 }
 
 module.exports = controller;

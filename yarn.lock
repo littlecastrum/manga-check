@@ -91,6 +91,11 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
+commander@^6.1.0:
+  version "6.1.0"
+  resolved "https://artifactory.gamesys.co.uk:443/artifactory/api/npm/gamesys-ps-community-npm/commander/-/commander-6.1.0.tgz#f8d722b78103141006b66f4c7ba1e97315ba75bc"
+  integrity sha1-+Ncit4EDFBAGtm9Me6HpcxW6dbw=
+
 core-util-is@1.0.2:
   version "1.0.2"
   resolved "https://artifactory.gamesys.co.uk:443/artifactory/api/npm/gamesys-ps-community-npm/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"

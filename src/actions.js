@@ -1,12 +1,11 @@
 require('colors');
 
 const prompts = require('prompts');
-const Maybe = require('./maybe');
-const { getLastest, updateStorage } = require('./utils');
+const { Maybe, getLastest, storage } = require('./utils');
 const { addMangaQuestions, checkMangaQuestions } = require('./questions');
 
 const showUnseen = ({ seen, name, url, lastUpdate }) => {		
-	if (!seen) console.log(`\nWatch ${name.red} latests chapter at ${url.blue}\n`);
+	if (!seen) console.log(`Watch ${name} latests chapter at ${url}`);
 	return { seen, name, url, lastUpdate }
 };
 
@@ -14,7 +13,7 @@ async function add(mangas) {
 	const response = await prompts(addMangaQuestions);
 	const newManga = await getLastest(response);
 	const data = [...mangas, newManga];
-	return await updateStorage(data);
+	return await storage.update(data);
 }
 
 async function update(mangas) {
@@ -22,8 +21,8 @@ async function update(mangas) {
 	Maybe(data)
 		.map(arr => arr.every(({ seen }) => seen) ? null : data)
 		.map(arr => arr.map(showUnseen))
-		.alt(() => console.log('\nYou are up to date\n'.yellow))
-	return await updateStorage(data);
+		.alt(() => console.log('You are up to date'))
+	return await storage.update(data);
 }
 
 async function check(mangas) {
@@ -55,13 +54,13 @@ async function check(mangas) {
 		return acc;
 	}, mangas);
 
-	return await updateStorage(data);
+	return await storage.update(data);
 }
 
-module.exports = [
+module.exports = {
 	add,
 	update,
 	check,
-	() => console.log('REMOVE'),
-	() => console.log('\nBYE BYE!')	
-]
+	remove: () => console.log('REMOVE'),
+	exit: () => console.log('\nBYE BYE!')	
+}
