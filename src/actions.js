@@ -1,7 +1,7 @@
 require('colors');
 
 const prompts = require('prompts');
-const { Maybe, getLastest, storage } = require('./utils');
+const { getLastest, storage, all, getProp } = require('./utils');
 const { addMangaQuestions, checkMangaQuestions } = require('./questions');
 
 const showUnseen = ({ seen, name, url, lastUpdate }) => {		
@@ -12,6 +12,8 @@ const showUnseen = ({ seen, name, url, lastUpdate }) => {
 	return { seen, name, url, lastUpdate }
 };
 
+const showUpToDate = () => console.log('\nYou are up to date\n'.yellow);
+
 async function add(mangas) {
 	const response = await prompts(addMangaQuestions);
 	const newManga = await getLastest(response);
@@ -21,11 +23,14 @@ async function add(mangas) {
 
 async function update(mangas) {
 	const data = await Promise.all(mangas.map(getLastest));
-	Maybe(data)
-		.map(arr => arr.every(({ seen }) => seen) ? null : data)
-		.map(arr => arr.map(showUnseen))
-		.alt(() => console.log('\nYou are up to date\n'.yellow))
-	return await storage.update(data);
+	const allSeenFalse = all(false)((seen) => seen.chain(getProp('seen')).getOrElse(false));
+	
+	allSeenFalse(data).matchWith({
+		Nothing: showUpToDate,
+		Just: ({ value }) => value.map(showUnseen)
+	})
+
+	// return await storage.update(data);
 }
 
 async function check(mangas) {
@@ -40,7 +45,7 @@ async function check(mangas) {
 	}, []);
 
 	if (!options.length) {
-		console.log('\nYou are up to date\n'.yellow);
+		showUpToDate();
 		return;
 	};
 	

@@ -6,9 +6,10 @@
   "author": "Dan Castrillo",
   "license": "MIT",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
     "colors": "^1.4.0",
     "commander": "^6.1.0",
-    "jsdom": "^16.4.0",
+    "folktale": "^2.3.2",
     "moment": "^2.28.0",
     "node-fetch": "^2.6.1",
     "prompts": "^2.3.2"
