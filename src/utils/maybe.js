@@ -22,4 +22,4 @@ const Just = (value) => ({
 
 const Maybe = (value) => isNullOrUndef(value) ? Nothing : Just(value);
 
-module.exports = Maybe;
+export default Maybe;

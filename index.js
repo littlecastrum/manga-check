@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-const { program } = require('commander');
-const main = require('./src/main');
+import commander from 'commander';
+import main from './src/main.js';
 
-program.version('0.0.1');
-program
+commander.program.version('0.0.1');
+commander.program
 	.option('-n, --notify', 'notify of latests manga chapters available', false);
  
-program.parse(process.argv);
+commander.program.parse(process.argv);
 
-main(program.notify);
+main(commander.program.notify);

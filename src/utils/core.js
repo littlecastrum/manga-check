@@ -1,12 +1,12 @@
-const { Just, fromNullable, Nothing } = require('folktale/maybe');
-
+import folktale from 'folktale/maybe/index.js';
+const { Just, fromNullable, Nothing } = folktale;
 /**
  * 
  * @type Object
  * @description Collection of methods for safe handling of objects
  */
 
-const getProp = prop => obj =>
+export const getProp = prop => obj =>
 	typeof obj === 'object' && obj !== null && Reflect.has(obj, prop) 
 		? typeof obj[prop] === 'function' ? Just(obj[prop]()) : Just(obj[prop])
 		: Nothing();
@@ -17,14 +17,14 @@ const getProp = prop => obj =>
  * @description Collection of methods for safe handling of strings
  */
 
-const safeStrMethod = method => val => str => 
+export const safeStrMethod = method => val => str => 
 	typeof str === 'string' && Reflect.has(String.prototype, method) 
 		? Just(str[method](val)) 
 		: Nothing();
 
-const split = safeStrMethod('split');
-const trim = safeStrMethod('trim')();
-const isSubStr = safeStrMethod('includes')
+export const split = safeStrMethod('split');
+export const trim = safeStrMethod('trim')();
+export const isSubStr = safeStrMethod('includes')
 
 /**
  * 
@@ -32,16 +32,6 @@ const isSubStr = safeStrMethod('includes')
  * @description Collection of methods for safe handling of arrays
  */
 
-const all = bool => fn => arr => arr.every(fn) === bool ? Just(arr) : Nothing();
-const first = xs => fromNullable(xs[0]);
-const second = xs => fromNullable(xs[1]);
-
-module.exports = {
-	getProp,
-	split,
-	trim,
-	isSubStr,
-	all,
-	first,
-	second
-}
+export const all = bool => fn => arr => arr.every(fn) === bool ? Just(arr) : Nothing();
+export const first = xs => fromNullable(xs[0]);
+export const second = xs => fromNullable(xs[1]);

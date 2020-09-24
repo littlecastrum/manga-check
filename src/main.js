@@ -1,10 +1,11 @@
-const colors = require('colors');
-const prompts = require('prompts');
-const { exec } = require('child_process');
-const actions = require('./actions');
-const { mainChoices } = require('./questions');
-const { storage, catchStdout } = require('./utils');
+import colors from 'colors';
+import prompts from 'prompts';
+import { exec } from 'child_process';
+import actions from './actions.js';
+import { mainChoices } from './questions.js';
+import utils, { catchStdout } from './utils/index.js';
 
+const { storage } = utils;
 global.log = "";
 
 async function interactive(option) {
@@ -21,10 +22,13 @@ async function notify() {
 	const mangas = await storage.load();
 	const releaseStdout = catchStdout();
 	await actions.update(mangas);
-	const notification = releaseStdout();
+	const updates = releaseStdout();
+	const notification = updates.length > 1
+		? 'There are several updates'
+		: updates[0];
 	const title = 'Mangas updated'
-	const action = `display notification "${notification}" with title "${title}"`
-	const script = `osascript -e '${action}'`
+	const script = `terminal-notifier -title '${title}' -message '${notification}'`
+
 	exec(script)	
 }
 
@@ -34,4 +38,4 @@ async function controller(isNotify) {
 		: interactive();
 }
 
-module.exports = controller;
+export default controller;

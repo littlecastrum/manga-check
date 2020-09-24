@@ -1,11 +1,12 @@
-const fetch = require('node-fetch');
-const moment = require('moment');
-const cheerio = require('cheerio');
-const { Just, Nothing } = require('folktale/maybe');
-const { getProp, split, isSubStr, trim, all, first, second } = require('./core');
-const storage = require('./storage');
+import fetch from 'node-fetch';
+import moment from 'moment';
+import cheerio from 'cheerio';
+import folktale from 'folktale/maybe/index.js';
+import { getProp, split, isSubStr, trim, all, first, second } from './core.js';
+import storage from './storage.js';
+const { Just, Nothing } = folktale;
 
-function getDateFromHTML(html) {
+export function getDateFromHTML(html) {
 	const $ = cheerio.load(html);
 	
 	const alternative = () => Just($('.manga-info-text'))
@@ -30,10 +31,10 @@ function getDateFromHTML(html) {
 	
 }
 
-const isBefore = (thisDate) => (thatDate) => thisDate.isBefore(thatDate, 'day');
+export const isBefore = (thisDate) => (thatDate) => thisDate.isBefore(thatDate, 'day');
 
-async function getLastest({ name, url, seen, lastUpdate }) {
-	if (!seen) return { name, url, seen, lastUpdate };
+export async function getLastest({ name, url, seen, lastUpdate }) {
+	if (!seen) return Just({ name, url, seen, lastUpdate });
 				
 	const response = await fetch(url);
 	const html = await response.text();
@@ -51,13 +52,19 @@ async function getLastest({ name, url, seen, lastUpdate }) {
 	});
 }
 
-function catchStdout() {
-	let data = '';
+export function catchStdout() {
+	const data = [];
 	const stdoutWrite = process.stdout.write;
 	
 	process.stdout.write = ((write) => {
 		return function(string) {
-			data = string;
+			const url = 
+				second(string.split('https://'))
+					.chain(trim)
+					.getOrElse(false);
+
+			if (url) data.push(url);
+			
 			write.apply(process.stdout, arguments);
 		};
 	})(process.stdout.write);
@@ -68,15 +75,13 @@ function catchStdout() {
 	}
 }
 
-module.exports = {
-	getLastest,
-	storage,
-	catchStdout,
+export default {
 	getProp,
 	split,
 	isSubStr,
 	trim,
 	all,
 	first,
-	second
+	second,
+	storage
 }

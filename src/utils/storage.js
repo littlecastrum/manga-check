@@ -1,7 +1,8 @@
-const { Nothing } = require('folktale/maybe');
-const fs = require('fs');
-const path = require('path');
-const util = require('util');
+import fs from 'fs';
+import path from 'path';
+import util from 'util';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
@@ -20,7 +21,7 @@ async function update(data) {
 	}
 }
 
-module.exports = {
+export default {
 	load,
 	update,
 }

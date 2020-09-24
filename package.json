@@ -5,6 +5,7 @@
   "main": "index.js",
   "author": "Dan Castrillo",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "colors": "^1.4.0",

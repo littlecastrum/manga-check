@@ -1,6 +1,6 @@
-require('colors');
+import 'colors';
 
-const OPTIONS = {
+export const OPTIONS = {
 	add: {
 		title: 'Add new manga',
 		value: 'add'
@@ -23,9 +23,9 @@ const OPTIONS = {
 	}
 }
 
-const extractChoices = (acc, {title, value}) => [...acc, { title, value }];
+export const extractChoices = (acc, {title, value}) => [...acc, { title, value }];
 
-const mainChoices = {
+export const mainChoices = {
 	type: 'select',
 	name: 'value',
 	message: 'Options',
@@ -33,7 +33,7 @@ const mainChoices = {
 	initial: 0
 };
 
-const addMangaQuestions = [
+export const addMangaQuestions = [
 	{
 		type: 'text',
 		name: 'name',
@@ -52,7 +52,7 @@ const addMangaQuestions = [
 	}
 ];
 
-const checkMangaQuestions = (choices) => ({
+export const checkMangaQuestions = (choices) => ({
 	type: 'multiselect',
 	name: 'seen',
 	instructions: false,
@@ -60,9 +60,3 @@ const checkMangaQuestions = (choices) => ({
 	choices,
 	hint: '- Space to select. Return to submit'
 });
-
-module.exports = {
-	mainChoices,
-	addMangaQuestions,
-	checkMangaQuestions
-}

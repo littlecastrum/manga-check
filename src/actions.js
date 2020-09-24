@@ -1,8 +1,12 @@
-require('colors');
+import 'colors';
+import prompts from 'prompts';
+import  utils, { getLastest } from './utils/index.js';
+import  {
+	addMangaQuestions,
+	checkMangaQuestions
+} from './questions.js';
 
-const prompts = require('prompts');
-const { getLastest, storage, all, getProp } = require('./utils');
-const { addMangaQuestions, checkMangaQuestions } = require('./questions');
+const { storage, all, getProp } = utils;
 
 const showUnseen = ({ seen, name, url, lastUpdate }) => {		
 	if (!seen) {
@@ -23,14 +27,15 @@ async function add(mangas) {
 
 async function update(mangas) {
 	const data = await Promise.all(mangas.map(getLastest));
-	const allSeenFalse = all(false)((seen) => seen.chain(getProp('seen')).getOrElse(false));
-	
+	const allSeenFalse = all(false)((manga) => manga.chain(getProp('seen')).getOrElse(false));
 	allSeenFalse(data).matchWith({
 		Nothing: showUpToDate,
-		Just: ({ value }) => value.map(showUnseen)
+		Just: ({ value }) => value.map((manga) => manga.map(showUnseen))
 	})
 
-	// return await storage.update(data);
+	const unwrappedData = data.map(manga => manga.getOrElse(''));
+
+	return await storage.update(unwrappedData);
 }
 
 async function check(mangas) {
@@ -65,7 +70,7 @@ async function check(mangas) {
 	return await storage.update(data);
 }
 
-module.exports = {
+export default {
 	add,
 	update,
 	check,
