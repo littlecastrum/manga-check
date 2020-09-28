@@ -6,6 +6,15 @@ import { getProp, split, isSubStr, trim, all, first, second } from './core.js';
 import storage from './storage.js';
 const { Just, Nothing } = folktale;
 
+export function isURL(str) {
+	try {
+		new URL(str);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
 export function getDateFromHTML(html) {
 	const $ = cheerio.load(html);
 	
@@ -59,11 +68,11 @@ export function catchStdout() {
 	process.stdout.write = ((write) => {
 		return function(string) {
 			const url = 
-				second(string.split('https://'))
+				second(string.split(' at '))
 					.chain(trim)
-					.getOrElse(false);
+					.getOrElse(string);
 
-			if (url) data.push(url);
+			data.push(url);
 			
 			write.apply(process.stdout, arguments);
 		};
@@ -76,6 +85,7 @@ export function catchStdout() {
 }
 
 export default {
+	isURL,
 	getProp,
 	split,
 	isSubStr,

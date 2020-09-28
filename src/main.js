@@ -3,7 +3,7 @@ import prompts from 'prompts';
 import { exec } from 'child_process';
 import actions from './actions.js';
 import { mainChoices } from './questions.js';
-import utils, { catchStdout } from './utils/index.js';
+import utils, { catchStdout, isURL } from './utils/index.js';
 
 const { storage } = utils;
 global.log = "";
@@ -24,10 +24,15 @@ async function notify() {
 	await actions.update(mangas);
 	const updates = releaseStdout();
 	const notification = updates.length > 1
-		? 'There are several updates'
-		: updates[0];
-	const title = 'Mangas updated'
-	const script = `terminal-notifier -title '${title}' -message '${notification}'`
+		? 'there are several updates'
+		: isURL(updates[0]) 
+			? 'click to check' 
+			: updates[0];
+	const title = `-title 'Manga Tracker'`;
+	const subtitle = `-subtitle 'Checked for updates'`;
+	const message = `-message '${notification}'`;
+	const open = isURL(updates[0]) ? `-open ${updates[0]}` : '';
+	const script = `terminal-notifier ${title} ${subtitle} ${message} ${open}`;
 
 	exec(script)	
 }
