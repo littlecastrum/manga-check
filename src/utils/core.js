@@ -11,6 +11,11 @@ export const getProp = prop => obj =>
 		? typeof obj[prop] === 'function' ? Just(obj[prop]()) : Just(obj[prop])
 		: Nothing();
 
+export const safeObj = obj =>
+	typeof obj === 'object' && Object.keys(obj).length && obj !== null 
+		? Just(obj)
+		: Nothing();
+
 /**
  * 
  * @type String

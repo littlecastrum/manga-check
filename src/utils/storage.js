@@ -17,7 +17,7 @@ async function update(data) {
 	try {
 		await writeFile(filePath, JSON.stringify(data), 'utf8');
 	} catch(err) {
-		console.error(err);
+		console.log(`\n${err.message.red}\n`)
 	}
 }
 

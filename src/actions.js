@@ -6,7 +6,7 @@ import  {
 	checkMangaQuestions
 } from './questions.js';
 
-const { storage, all, getProp } = utils;
+const { storage, all, getProp, safeObj } = utils;
 
 const showUnseen = ({ seen, name, url, lastUpdate }) => {		
 	if (!seen) {
@@ -20,9 +20,11 @@ const showUpToDate = () => console.log('\nYou are up to date\n'.yellow);
 
 async function add(mangas) {
 	const response = await prompts(addMangaQuestions);
-	const newManga = await getLastest(response);
-	const data = [...mangas, newManga];
-	return await storage.update(data);
+	const safeRes = safeObj(response);
+	const maybeManga = await safeRes.chain(getLastest);
+	maybeManga
+		.map(manga => mangas.concat(manga))
+		.map(storage.update);
 }
 
 async function update(mangas) {

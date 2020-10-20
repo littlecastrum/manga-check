@@ -32,7 +32,8 @@ async function notify() {
 	const subtitle = `-subtitle 'Checked for updates'`;
 	const message = `-message '${notification}'`;
 	const open = isURL(updates[0]) ? `-open ${updates[0]}` : '';
-	const script = `terminal-notifier ${title} ${subtitle} ${message} ${open}`;
+	const sound = `-sound 'Submarine'`
+	const script = `terminal-notifier ${title} ${subtitle} ${sound} ${message} ${open}`;
 
 	exec(script)	
 }

@@ -1,8 +1,18 @@
+import 'colors';
 import fetch from 'node-fetch';
 import moment from 'moment';
 import cheerio from 'cheerio';
 import folktale from 'folktale/maybe/index.js';
-import { getProp, split, isSubStr, trim, all, first, second } from './core.js';
+import {
+	getProp,
+	safeObj,
+	split,
+	isSubStr,
+	trim,
+	all,
+	first,
+	second
+} from './core.js';
 import storage from './storage.js';
 const { Just, Nothing } = folktale;
 
@@ -36,29 +46,35 @@ export function getDateFromHTML(html) {
 		.chain(first)
 		.chain(trim)
 		.orElse(alternative)
-		.map(date => moment(date, 'LLL'))
+		.map(date => moment(date, 'MMM DD,YYYY'))
 	
 }
 
-export const isBefore = (thisDate) => (thatDate) => thisDate.isBefore(thatDate, 'day');
+export const isBefore = (thisDate) => (thatDate) => 
+thisDate !== 'Invalid date' && thisDate.isBefore(thatDate, 'day');
 
 export async function getLastest({ name, url, seen, lastUpdate }) {
 	if (!seen) return Just({ name, url, seen, lastUpdate });
-				
-	const response = await fetch(url);
-	const html = await response.text();
-	const formattedLastUpdate = moment(lastUpdate, 'DD-MM-YYYY');
-	const isNewChapter = isBefore(formattedLastUpdate);
-	const latests = getDateFromHTML(html)
-		.filter(isNewChapter)
-		.getOrElse(formattedLastUpdate);
+	
+	try {
+		const response = await fetch(url);
+		const html = await response.text();
+		const formattedLastUpdate = moment(lastUpdate, 'DD-MM-YY');
+		const isNewChapter = isBefore(formattedLastUpdate);
+		const latests = getDateFromHTML(html)
+			.filter(isNewChapter)
+			.getOrElse(formattedLastUpdate);
 
-	return Just({
-		name,
-		url,
-		seen: !isNewChapter(latests),
-		lastUpdate: latests.format('DD-MM-YYYY')
-	});
+		return Just({
+			name,
+			url,
+			seen: !isNewChapter(latests),
+			lastUpdate: latests.format('DD-MM-YY')
+		});
+	} catch(err) {
+		console.log(`\n[ getLastest ] - ${err.message}\n`.red)
+		return Nothing();
+	}
 }
 
 export function catchStdout() {
@@ -87,11 +103,12 @@ export function catchStdout() {
 export default {
 	isURL,
 	getProp,
+	safeObj,
 	split,
 	isSubStr,
 	trim,
 	all,
 	first,
 	second,
-	storage
+	storage,
 }
