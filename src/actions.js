@@ -27,11 +27,11 @@ async function add(mangas) {
 		.map(storage.update);
 }
 
-async function update(mangas) {
+async function update(mangas, defaultFn = showUpToDate) {
 	const data = await Promise.all(mangas.map(getLastest));
 	const allSeenFalse = all(false)((manga) => manga.chain(getProp('seen')).getOrElse(false));
 	allSeenFalse(data).matchWith({
-		Nothing: showUpToDate,
+		Nothing: defaultFn,
 		Just: ({ value }) => value.map((manga) => manga.map(showUnseen))
 	})
 

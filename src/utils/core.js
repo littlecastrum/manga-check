@@ -40,3 +40,15 @@ export const isSubStr = safeStrMethod('includes')
 export const all = bool => fn => arr => arr.every(fn) === bool ? Just(arr) : Nothing();
 export const first = xs => fromNullable(xs[0]);
 export const second = xs => fromNullable(xs[1]);
+
+/**
+ * switchcase (fn)
+ * @param {any} cases
+ * @param {any} defaultCase
+ * @param {string | number} key
+ */
+
+ export const switchcase = key => cases => defaultCase => {
+	const target = Reflect.has(cases, key) ? cases[key] : defaultCase;
+	return target instanceof Function ? target() : target;
+}

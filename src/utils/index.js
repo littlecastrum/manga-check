@@ -11,7 +11,8 @@ import {
 	trim,
 	all,
 	first,
-	second
+	second,
+	switchcase,
 } from './core.js';
 import storage from './storage.js';
 const { Just, Nothing } = folktale;
@@ -111,4 +112,5 @@ export default {
 	first,
 	second,
 	storage,
+	switchcase,
 }

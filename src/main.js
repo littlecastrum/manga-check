@@ -4,12 +4,13 @@ import { exec } from 'child_process';
 import actions from './actions.js';
 import { mainChoices } from './questions.js';
 import utils, { catchStdout, isURL } from './utils/index.js';
+import { CLI_OPTIONS } from './constants/index.js';
 
-const { storage } = utils;
+const { storage, switchcase } = utils;
 global.log = "";
 
 async function interactive(option) {
-	if (option === 'exit') return;
+	if (option === 'exit') process.exit();;
 	
 	const mangas = await storage.load();
 	const { value } = await prompts(mainChoices);
@@ -35,13 +36,25 @@ async function notify() {
 	const sound = `-sound 'Submarine'`
 	const script = `terminal-notifier ${title} ${subtitle} ${sound} ${message} ${open}`;
 
-	exec(script)	
+	exec(script);
+	process.exit();
 }
 
-async function controller(isNotify) {
-	isNotify 
-		? notify()
-		: interactive();
+async function get() {
+	colors.disable();
+	const mangas = await storage.load();
+	const releaseStdout = catchStdout();
+	await actions.update(mangas, () => []);
+	const updates = releaseStdout();
+	console.log(updates)
+	process.exit();
+}
+
+async function controller(flag) {
+	switchcase(flag)({
+		[CLI_OPTIONS.notify]: notify,
+		[CLI_OPTIONS.get]: get,
+	})(interactive);
 }
 
 export default controller;
