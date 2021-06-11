@@ -52,7 +52,7 @@ export function getDateFromHTML(html) {
 }
 
 export const isBefore = (thisDate) => (thatDate) => 
-thisDate !== 'Invalid date' && thisDate.isBefore(thatDate, 'day');
+!thisDate.isValid() || thisDate.isBefore(thatDate, 'day');
 
 export async function getLastest({ name, url, seen, lastUpdate }) {
 	if (!seen) return Just({ name, url, seen, lastUpdate });
@@ -60,7 +60,7 @@ export async function getLastest({ name, url, seen, lastUpdate }) {
 	try {
 		const response = await fetch(url);
 		const html = await response.text();
-		const formattedLastUpdate = moment(lastUpdate, 'DD-MM-YY');
+		const formattedLastUpdate = moment(lastUpdate, 'MMM DD,YYYY');
 		const isNewChapter = isBefore(formattedLastUpdate);
 		const latests = getDateFromHTML(html)
 			.filter(isNewChapter)
@@ -70,7 +70,7 @@ export async function getLastest({ name, url, seen, lastUpdate }) {
 			name,
 			url,
 			seen: !isNewChapter(latests),
-			lastUpdate: latests.format('DD-MM-YY')
+			lastUpdate: latests.format('MMM DD,YYYY')
 		});
 	} catch(err) {
 		console.log(`\n[ getLastest ] - ${err.message}\n`.red)
