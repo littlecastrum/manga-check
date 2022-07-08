@@ -11,7 +11,7 @@
     "colors": "^1.4.0",
     "commander": "^7.2.0",
     "folktale": "^2.3.2",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "node-fetch": "^2.6.1",
     "prompts": "^2.4.1"
   },
